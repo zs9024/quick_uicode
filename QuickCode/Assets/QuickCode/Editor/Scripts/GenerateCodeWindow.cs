@@ -68,6 +68,23 @@ namespace Quick.Code
         private Type scriptType;
         #endregion
 
+        #region 代码格式分类
+        private string regionStartFmt { get { return selectedBar == 0 ? CodeConfig.regionStartFmt : CodeConfig.regionStartFmtLua; } }
+        private string regionEnd { get { return selectedBar == 0 ? CodeConfig.regionEnd : CodeConfig.regionEndLua; } }
+        private string statementRegion { get { return CodeConfig.statementRegion; } }
+        private string eventRegion { get { return selectedBar == 0 ? CodeConfig.eventRegion : CodeConfig.eventRegionLua; } }
+        private string assignRegion { get { return selectedBar == 0 ? CodeConfig.assignRegion : CodeConfig.assignRegionLua; } }
+        private string methodStartFmt { get { return selectedBar == 0 ? CodeConfig.methodStartFmt : CodeConfig.methodStartFmtLua; } }
+        private string methodEnd { get { return selectedBar == 0 ? CodeConfig.methodEnd : CodeConfig.methodEndLua; } }
+        private string assignCodeFmt { get { return selectedBar == 0 ? CodeConfig.assignCodeFmt : CodeConfig.assignCodeFmtLua; } }
+        private string assignGameObjectCodeFmt { get { return selectedBar == 0 ? CodeConfig.assignGameObjectCodeFmt : CodeConfig.assignGameObjectCodeFmtLua; } }
+        private string assignRootCodeFmt { get { return selectedBar == 0 ? CodeConfig.assignRootCodeFmt : CodeConfig.assignRootCodeFmtLua; } }
+        private string onClickSerilCode { get { return selectedBar == 0 ? CodeConfig.onClickSerilCode : CodeConfig.onClickSerilCodeLua; } }
+        private string onValueChangeSerilCode { get { return selectedBar == 0 ? CodeConfig.onValueChangeSerilCode : CodeConfig.onValueChangeSerilCodeLua; } }
+        private string btnCallbackSerilCode { get { return selectedBar == 0 ? CodeConfig.btnCallbackSerilCode : CodeConfig.btnCallbackSerilCodeLua; } }
+        private string eventCallbackSerilCode { get { return selectedBar == 0 ? CodeConfig.eventCallbackSerilCode : CodeConfig.eventCallbackSerilCodeLua; } }
+        #endregion
+
         void OnEnable()
         {
             serializedObj = new SerializedObject(this);
@@ -241,79 +258,133 @@ namespace Quick.Code
             switch (selectedBar)
             {
                 case 0:
-                    EditorGUILayout.Space();
-                    isMono = GUILayout.Toggle(isMono, "继承MonoBehaviour");
-                    EditorGUILayout.Space();
-                    if (GUILayout.Button("变量声明", GUILayout.Width(halfViewWidth / 3f)))
-                    {
-                        BuildStatementCode();
-                    }
-
-                    EditorGUILayout.Space();
-                    using (EditorGUILayout.VerticalScope vScope = new EditorGUILayout.VerticalScope())
-                    {
-                        GUI.backgroundColor = Color.white;
-                        GUI.Box(vScope.rect, "");
-
-                        EditorGUILayout.LabelField("选择需要注册事件回调的控件:");
-                        DrawEventWedget();
-
-                        EditorGUILayout.Space();
-                        if (GUILayout.Button("注册事件", GUILayout.Width(halfViewWidth / 3f)))
-                        {
-                            BuildEventCode();
-                        }
-                    }
-
-                    EditorGUILayout.Space();
-                    using (EditorGUILayout.HorizontalScope hScope = new EditorGUILayout.HorizontalScope())
-                    {
-                        if (GUILayout.Button("查找赋值"))
-                        {
-                            BuildAssignmentCode();
-                        }
-
-                        if (GUILayout.Button("复制代码"))
-                        {
-                            TextEditor p = new TextEditor();
-                            codeAllText = new StringBuilder(codeStateText.ToString());
-                            codeAllText.Append(codeAssignText);
-                            codeAllText.Append(codeEventText);
-                            p.text = codeAllText.ToString();
-                            p.OnFocus();
-                            p.Copy();
-
-                            EditorUtility.DisplayDialog("提示", "代码复制成功", "OK");
-                        }
-                        if (GUILayout.Button("生成脚本"))
-                        {
-                            CreateCsUIScript();
-                        }                    
-                    }
-
-                    EditorGUILayout.Space();
-                    using (EditorGUILayout.HorizontalScope hScope = new EditorGUILayout.HorizontalScope())
-                    {
-                        if (isMono)
-                        {
-                            if (GUILayout.Button("挂载脚本组件"))
-                            {
-                                AddScriptComponent();
-                            }
-                            if (GUILayout.Button("绑定UI(无需查找赋值)"))
-                            {
-                                BindSerializeWedget();
-                            }
-                        }
-                    }
-                    DrawPreviewText();
-
+                    DrawCsPage();
                     break;
                 case 1:
+                    DrawLuaPage();
                     break;
                 default:
                     break;
             }
+        }
+
+        private void DrawCsPage()
+        {
+            EditorGUILayout.Space();
+            isMono = GUILayout.Toggle(isMono, "继承MonoBehaviour");
+            EditorGUILayout.Space();
+            if (GUILayout.Button("变量声明", GUILayout.Width(halfViewWidth / 3f)))
+            {
+                BuildStatementCode();
+            }
+
+            EditorGUILayout.Space();
+            using (EditorGUILayout.VerticalScope vScope = new EditorGUILayout.VerticalScope())
+            {
+                GUI.backgroundColor = Color.white;
+                GUI.Box(vScope.rect, "");
+
+                EditorGUILayout.LabelField("选择需要注册事件回调的控件:");
+                DrawEventWedget();
+
+                EditorGUILayout.Space();
+                if (GUILayout.Button("注册事件", GUILayout.Width(halfViewWidth / 3f)))
+                {
+                    BuildEventCode();
+                }
+            }
+
+            EditorGUILayout.Space();
+            using (EditorGUILayout.HorizontalScope hScope = new EditorGUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button("查找赋值"))
+                {
+                    BuildAssignmentCode();
+                }
+
+                if (GUILayout.Button("复制代码"))
+                {
+                    TextEditor p = new TextEditor();
+                    codeAllText = new StringBuilder(codeStateText.ToString());
+                    codeAllText.Append(codeAssignText);
+                    codeAllText.Append(codeEventText);
+                    p.text = codeAllText.ToString();
+                    p.OnFocus();
+                    p.Copy();
+
+                    EditorUtility.DisplayDialog("提示", "代码复制成功", "OK");
+                }
+                if (GUILayout.Button("生成脚本"))
+                {
+                    CreateCsUIScript();
+                }
+            }
+
+            EditorGUILayout.Space();
+            using (EditorGUILayout.HorizontalScope hScope = new EditorGUILayout.HorizontalScope())
+            {
+                if (isMono)
+                {
+                    if (GUILayout.Button("挂载脚本组件"))
+                    {
+                        AddScriptComponent();
+                    }
+                    if (GUILayout.Button("绑定UI(无需查找赋值)"))
+                    {
+                        BindSerializeWedget();
+                    }
+                }
+            }
+            DrawPreviewText();
+        }
+
+        private void DrawLuaPage()
+        {
+            EditorGUILayout.Space();
+            if (GUILayout.Button("查找赋值", GUILayout.Width(halfViewWidth / 3f)))
+            {
+                BuildStatementCode();
+                BuildAssignmentCode();
+            }
+
+            EditorGUILayout.Space();
+            using (EditorGUILayout.VerticalScope vScope = new EditorGUILayout.VerticalScope())
+            {
+                GUI.backgroundColor = Color.white;
+                GUI.Box(vScope.rect, "");
+
+                EditorGUILayout.LabelField("选择需要注册事件回调的控件:");
+                DrawEventWedget();
+
+                EditorGUILayout.Space();
+                if (GUILayout.Button("注册事件", GUILayout.Width(halfViewWidth / 3f)))
+                {
+                    BuildEventCode();
+                }
+            }
+
+            EditorGUILayout.Space();
+            using (EditorGUILayout.HorizontalScope hScope = new EditorGUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button("复制代码"))
+                {
+                    TextEditor p = new TextEditor();
+                    codeAllText = new StringBuilder();
+                    codeAllText.Append(codeAssignText);
+                    codeAllText.Append(codeEventText);
+                    p.text = codeAllText.ToString();
+                    p.OnFocus();
+                    p.Copy();
+
+                    EditorUtility.DisplayDialog("提示", "代码复制成功", "OK");
+                }
+                if (GUILayout.Button("生成脚本"))
+                {
+                    CreateLuaUIScript();
+                }
+            }
+
+            DrawPreviewText();
         }
 
         /// <summary>
@@ -466,8 +537,8 @@ namespace Quick.Code
             codeEventText = null;
             codeEventText = new StringBuilder();
 
-            codeEventText.Append(CodeConfig.eventRegion);
-            codeEventText.AppendFormat(CodeConfig.methodStartFmt, "AddEvent");
+            codeEventText.Append(eventRegion);
+            codeEventText.AppendFormat(methodStartFmt, "AddEvent");
 
             bool hasEventWedget = false;    //标识是否有控件注册了事件
             for (int i = 0; i < uiWedgets.Count; i++)
@@ -491,14 +562,14 @@ namespace Quick.Code
                             string methodName = variableName.Substring(variableName.IndexOf('_') + 1);
                             if (uiWedgets[i] is Button)
                             {                                
-                                codeEventText.AppendFormat(CodeConfig.onClickSerilCode, variableName, methodName);
-                                codeEventText.AppendFormat(CodeConfig.btnCallbackSerilCode, methodName);
+                                codeEventText.AppendFormat(onClickSerilCode, variableName, methodName);
+                                codeEventText.AppendFormat(btnCallbackSerilCode, methodName);
 
                                 hasEventWedget = true;
                             }
                             else
                             {
-                                string addEventStr = string.Format(CodeConfig.onValueChangeSerilCode, variableName, methodName);
+                                string addEventStr = string.Format(onValueChangeSerilCode, variableName, methodName);
                                 if (hasEventWedget)
                                 {
                                     codeEventText.Insert(codeEventText.ToString().LastIndexOf(';') + 1, addEventStr);
@@ -520,7 +591,7 @@ namespace Quick.Code
 
                                 if (!string.IsNullOrEmpty(paramType))
                                 {
-                                    codeEventText.AppendFormat(CodeConfig.eventCallbackSerilCode, methodName, paramType);
+                                    codeEventText.AppendFormat(eventCallbackSerilCode, methodName, paramType);
                                 }
 
                                 hasEventWedget = true;
@@ -534,13 +605,13 @@ namespace Quick.Code
             string codeStr = codeEventText.ToString();
             if (hasEventWedget)
             {
-                codeEventText.Insert(codeStr.LastIndexOf(';') + 1, CodeConfig.methodEnd);
+                codeEventText.Insert(codeStr.LastIndexOf(';') + 1, methodEnd);
             }
             else
             {
-                codeEventText.Append(CodeConfig.methodEnd);
+                codeEventText.Append(methodEnd);
             }
-            codeEventText.Append(CodeConfig.regionEnd);
+            codeEventText.Append(regionEnd);
             return codeEventText.ToString();
         }
 
@@ -561,7 +632,7 @@ namespace Quick.Code
                 {                    
                     scrollTextPos = scr.scrollPosition;
 
-                    if (codeStateText != null && !string.IsNullOrEmpty(codeStateText.ToString()))
+                    if (codeStateText != null && !string.IsNullOrEmpty(codeStateText.ToString()) && selectedBar == 0)
                     {
                         //GUILayout.TextArea(codeStateText.ToString());
                         GUILayout.Label(codeStateText.ToString());
@@ -582,7 +653,7 @@ namespace Quick.Code
         }
 
         /// <summary>
-        /// 生成继承monobehavior的UI脚本
+        /// 生成C# UI脚本
         /// </summary>
         private void CreateCsUIScript()
         {
@@ -614,6 +685,34 @@ namespace Quick.Code
 
             Debug.Log("脚本生成成功,生成路径为:" + path);
             EditorPrefs.SetString("create_script_folder", path);            
+        }
+
+        /// <summary>
+        /// 生成Lua UI脚本
+        /// </summary>
+        private void CreateLuaUIScript()
+        {
+            string path = EditorPrefs.GetString("create_script_folder_lua", "");
+            path = EditorUtility.SaveFilePanel("Create lua Script", path, root.name + ".lua", "lua");
+            if (string.IsNullOrEmpty(path)) return;
+
+            int index = path.LastIndexOf('/');
+            className = path.Substring(index + 1, path.LastIndexOf('.') - index - 1);
+
+            StringBuilder scriptBuilder = new StringBuilder();
+            scriptBuilder.Append(CodeConfig.codeAnnotationLua);
+            scriptBuilder.Append(CodeConfig.requireCode);
+            scriptBuilder.AppendFormat(CodeConfig.classStartLua, className, className);
+            scriptBuilder.AppendFormat(CodeConfig.classCtorLua, className);
+            scriptBuilder.Append(codeAssignText);
+            scriptBuilder.Append(codeEventText);
+            scriptBuilder.AppendFormat(CodeConfig.classEndLua, className);
+
+            File.WriteAllText(path, scriptBuilder.ToString().Replace("Class", className), new UTF8Encoding(false));
+            AssetDatabase.Refresh();
+
+            Debug.Log("脚本生成成功,生成路径为:" + path);
+            EditorPrefs.SetString("create_script_folder_lua", path);
         }
 
         /// <summary>
@@ -707,16 +806,16 @@ namespace Quick.Code
         private void BuildAssignmentCode()
         {
             codeAssignText = new StringBuilder();
-            codeAssignText.Append(CodeConfig.assignRegion);
-            codeAssignText.AppendFormat(CodeConfig.methodStartFmt, "InitUI");
-            if (!isMono)
+            codeAssignText.Append(assignRegion);
+            codeAssignText.AppendFormat(methodStartFmt, "InitUI");
+            if (!isMono && selectedBar == 0)
             {
                 codeAssignText.Append(CodeConfig.assignTransform);
             }
 
             var allPath = GetChildrenPaths(root);
 
-            if(variableNameDic == null)
+            if (variableNameDic == null)
             {
                 return;
             }
@@ -729,9 +828,9 @@ namespace Quick.Code
 
                 string path = "";
                 bool isRootComponent = false;
-                foreach(var tran in allPath.Keys)
+                foreach (var tran in allPath.Keys)
                 {
-                    if (tran == null) continue; 
+                    if (tran == null) continue;
 
                     UIBehaviour behav = obj as UIBehaviour;
                     if (behav != null)
@@ -756,25 +855,25 @@ namespace Quick.Code
                     }
                 }
 
-                if(obj is GameObject)
+                if (obj is GameObject)
                 {
-                    codeAssignText.AppendFormat(CodeConfig.assignGameObjectCodeFmt, name, path);
+                    codeAssignText.AppendFormat(assignGameObjectCodeFmt, name, path);
                 }
                 else
                 {
                     if (isRootComponent)
                     {
-                        codeAssignText.AppendFormat(CodeConfig.assignRootCodeFmt, name, obj.GetType().Name);
+                        codeAssignText.AppendFormat(assignRootCodeFmt, name, obj.GetType().Name);
                     }
                     else
                     {
-                        codeAssignText.AppendFormat(CodeConfig.assignCodeFmt, name, path, obj.GetType().Name);
+                        codeAssignText.AppendFormat(assignCodeFmt, name, path, obj.GetType().Name);
                     }
                 }
             }
 
-            codeAssignText.Append(CodeConfig.methodEnd);
-            codeAssignText.Append(CodeConfig.regionEnd);
+            codeAssignText.Append(methodEnd);
+            codeAssignText.Append(regionEnd);
             //Debug.Log(codeAssignText.ToString());
         }
 
