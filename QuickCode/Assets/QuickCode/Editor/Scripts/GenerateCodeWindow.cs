@@ -16,7 +16,7 @@ namespace Quick.Code
     public class GenerateCodeWindow : EditorWindow
     {
 
-        [MenuItem("PSD2UGUI/QuickGenCode")]
+        [MenuItem("QuickTool/QuickGenCode")]
         public static void OpenWindow()
         {
             if (codeWindow == null)
