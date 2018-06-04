@@ -55,10 +55,10 @@ namespace Quick.Code
         //控件遍历声明,0:类型 1:名称
         public const string serilStateCodeFmt = "\t[SerializeField] private {0} {1}; \n";
 
-        public const string onClickSerilCode        = "\t\t{0}.onClick.AddListener(On{1}Clicked); \n";
+        public const string onClickSerilCode        = "\n\t\t{0}.onClick.AddListener(On{1}Clicked); \n";
         public const string onValueChangeSerilCode  = "\n\t\t{0}.onValueChanged.AddListener(On{1}ValueChanged);";
 
-        public const string btnCallbackSerilCode        = "\tprivate void On{0}Clicked()\n\t{{\n\n\t}}\n";
+        public const string btnCallbackSerilCode        = "\n\tprivate void On{0}Clicked()\n\t{{\n\n\t}}\n";
         public const string eventCallbackSerilCode = "\n\tprivate void On{0}ValueChanged({1} arg)\n\t{{\n\n\t}}\n";
         #endregion
 
