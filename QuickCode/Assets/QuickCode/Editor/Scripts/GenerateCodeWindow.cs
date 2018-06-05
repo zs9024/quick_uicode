@@ -566,7 +566,7 @@ namespace Quick.Code
                                 if (hasEventWidget)
                                 {
                                     string str = codeEventText.ToString();
-                                    codeEventText.Insert(str.LastIndexOf(';') + 1, onClickStr);
+                                    codeEventText.Insert(str.LastIndexOf(';') + 1, "\n" + onClickStr);
                                 }
                                 else
                                 {
