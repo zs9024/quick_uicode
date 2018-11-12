@@ -22,6 +22,7 @@ ExportedObj/
 *.booproj
 *.svd
 *.pdb
+*.obj
 
 # Unity3D generated meta files
 *.pidb.meta
@@ -36,10 +37,14 @@ sysinfo.txt
 # unity library
 QuickCode/Library/
 QuickCode/Temp/
+QuickCode/obj/
+QuickCode/Packages/
 
 #vs proj
 QuickCode.CSharp.Editor.csproj
 QuickCode.sln
 QuickCode.v12.suo
+.vs
+
 
 *LuaProject
