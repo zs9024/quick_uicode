@@ -2,6 +2,7 @@
 ## 介绍
 一个快速自动生成ui代码的编辑器工具，解除繁琐的ui控件查找赋值和事件注册，包括c#和lua两种语言，lua框架基于tolua#(暂未包含进工程)。<br>
 配合使用psd2ugui工具 https://github.com/zs9024/quick_psd2ugui ，让做ui更简单。<br>
+其中编辑器中列表的序列化使用了第三方开源的序列化工具reorderble-list: https://github.com/rotorz/unity3d-reorderable-list<br>
 unity测试版本:5.3.3f1<br>
 ## 效果
 ![旋转效果1](https://github.com/zs9024/quick_uicode/blob/master/Screenshots/code.png)<br>
